@@ -1,5 +1,4 @@
-Personal Website
+Personal Website - Currently under Construction But Here's A Quick Sumaary of Me
 
-
-V1 (June 23 2023)
-- Plain HTML, CSS 
+- Computer Science @ Cornell University '26
+- Currently @ Ceros as a Software Engineering Intern on the Quality Assurance Team
