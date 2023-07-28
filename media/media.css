@@ -1,0 +1,51 @@
+@font-face { font-family: Poppins-Regular; src: url('/Poppins/Poppins-Regular.ttf'); } 
+@font-face { font-family: Poppins-Medium; src: url('/Poppins/Poppins-Medium.ttf'); } 
+@font-face { font-family: Poppins-Light; src: url('/Poppins/Poppins-Light.ttf'); } 
+@font-face { font-family: Poppins-Thin; src: url('/Poppins/Poppins-Thin.ttf'); } 
+
+
+
+/* @font-face { font-family: Poppins; font-weight: bold; src: url('/Poppins/Poppins-Bold.ttf'); }  */
+
+body {
+  padding-left: 10%;
+  padding-top: 20%; 
+}
+
+h1 { 
+    font-family: Poppins-Medium, sans-serif; 
+    color: black;
+}
+
+h3 {
+    font-family: Poppins-Regular, sans-serif;
+    font-size: large;
+
+}
+
+p {
+    font-family: Poppins-Light, sans-serif;
+    font-size: medium;
+
+}
+
+mark.cornell {
+    background: none;
+    color: #8C271E;
+}
+
+a:link {
+    color: grey;
+    background-color: transparent;
+  }
+  
+  a:visited {
+    color: grey;
+    background-color: transparent;
+  }
+  
+  a:hover {
+    color: red;
+    background-color: transparent;
+    text-decoration: underline;
+  }
