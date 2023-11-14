@@ -9,8 +9,9 @@
 
 body {
   padding-left: 10%;
-  padding-top: 20%; 
+  padding-top: 10%; 
 }
+
 
 h1 { 
     font-family: Poppins-Medium, sans-serif; 
@@ -29,11 +30,6 @@ p {
 
 }
 
-mark.cornell {
-    background: none;
-    color: #8C271E;
-}
-
 a:link {
     color: grey;
     background-color: transparent;
@@ -49,3 +45,4 @@ a:link {
     background-color: transparent;
     text-decoration: underline;
   }
+
