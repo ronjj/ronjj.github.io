@@ -9,9 +9,18 @@
 
 /* @font-face { font-family: Poppins; font-weight: bold; src: url('/Poppins/Poppins-Bold.ttf'); }  */
 
-body {
+.main-content{
+  display: flex;
+  flex-direction: column;
   padding-left: 10%;
-  padding-top: 20%; 
+  padding-top: 10%;
+  column-gap: 5px;
+}
+
+.links {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
 }
 
 h1 { 

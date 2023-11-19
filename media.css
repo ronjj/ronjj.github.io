@@ -7,11 +7,26 @@
 
 /* @font-face { font-family: Poppins; font-weight: bold; src: url('/Poppins/Poppins-Bold.ttf'); }  */
 
-body {
+.main-content{
+  display: flex;
+  flex-direction: column;
   padding-left: 10%;
-  padding-top: 10%; 
+  padding-top: 10%;
+  column-gap: 5px;
 }
 
+.book-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.book {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
 
 h1 { 
     font-family: Poppins-Medium, sans-serif; 
@@ -30,7 +45,12 @@ p {
 
 }
 
-a:link {
+a {
+  font-family: Poppins-Light, sans-serif;
+}
+
+
+  a:link {
     color: grey;
     background-color: transparent;
   }
@@ -46,3 +66,26 @@ a:link {
     text-decoration: underline;
   }
 
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (max-width: 768px) {  
+
+  .book-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+
+  a {
+    font-family: Poppins-Light, sans-serif;
+    font-size: 15px;
+  }
+  p {
+    font-family: Poppins-Light, sans-serif;
+    font-size: 15px;
+  }
+
+  .bottom-link {
+    padding: 30px 50px 30px 0px;
+  }
+} 
