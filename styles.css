@@ -28,6 +28,11 @@ h1 {
     color: black;
 }
 
+h2 { 
+  font-family: Poppins-Medium, sans-serif; 
+  color: black;
+}
+
 h3 {
     font-family: Poppins-Regular, sans-serif;
     font-size: large;
@@ -43,6 +48,10 @@ p {
 mark.cornell {
     background: none;
     color: #8C271E;
+}
+
+a {
+  font-family: Poppins-Light, sans-serif;
 }
 
 a:link {
@@ -61,3 +70,43 @@ a:link {
     text-decoration: underline;
   }
   
+
+  /* Media Section */
+
+  .media-text {
+    padding-top: 20px;
+  }
+
+  .book-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  
+  .book {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+  }
+/* mobile view */
+@media (max-width: 768px) {  
+
+  .book-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  a {
+    font-family: Poppins-Light, sans-serif;
+    font-size: 15px;
+  }
+  p {
+    font-family: Poppins-Light, sans-serif;
+    font-size: 15px;
+  }
+} 
+
+
+
