@@ -89,9 +89,30 @@ a:link {
   }
 /* mobile view */
 @media (max-width: 768px) {  
+  h1 {
+    font-size: 30px;
+  }
+
   .links {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .book-row {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .book {
+    align-items: flex-start;
+    text-align: left;
+    width: 100%;
+  }
+
+  .book img {
+    width: 100%;
+    max-width: 250px;
+    align-self: flex-start;
   }
 
   a {
