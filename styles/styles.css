@@ -40,7 +40,6 @@ h3 {
 p {
     font-family: Poppins-Light, sans-serif;
     font-size: medium;
-
 }
 
 mark.cornell {
@@ -165,7 +164,7 @@ a:link {
 }
 
 body, p, li, ul, ol {
-    font-family: 'Poppins', sans-serif;
+    font-family: Poppins-Light, sans-serif;
 }
 
 
