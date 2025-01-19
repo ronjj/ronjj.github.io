@@ -131,4 +131,41 @@ a:link {
   }
 }
 
+/* Blog specific styles */
+.blog-content {
+    max-width: 65ch;  /* ch unit is the width of the "0" character, roughly limiting to 65-70 characters per line */
+    margin: 0 auto;   /* Center the content */
+    line-height: 1.6; /* Improve readability with better line height */
+}
+
+.blog-content p {
+    margin-bottom: 1.5em;  /* Add space between paragraphs */
+    text-align: justify;   /* Clean text alignment */
+}
+
+.subtitle {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 2em;
+}
+
+.date {
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Ensure lists in blog posts are properly formatted */
+.blog-content ol, .blog-content ul {
+    margin-left: 2em;
+    margin-bottom: 1.5em;
+}
+
+.blog-content li {
+    margin-bottom: 0.5em;
+}
+
+body, p, li, ul, ol {
+    font-family: 'Poppins', sans-serif;
+}
+
 
