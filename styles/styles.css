@@ -125,7 +125,8 @@ a:link {
 
 @media (max-width:991px) {
   .app-store-screenshots {
-    display:none;
+    padding-top: 20px;
+    margin-top: 20px;
   }
 }
 
