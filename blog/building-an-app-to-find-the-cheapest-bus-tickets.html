@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base target="_blank">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <title>Building An App To Find The Cheapest Bus Tickets Between Upstate New York and NYC - Ronald Jabouin Jr</title>
+    <link
+    rel="stylesheet"
+    href="https://cdn.locadapt.com/locadapt.min.css"
+    />
+    <script
+    src="https://cdn.locadapt.com/locadapt.min.js"
+    data-project-id="7b621cc3-43a2-4dd7-9fce-dca784360759"
+    ></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+</head>
+
+<body>
+    <div class="main-content">
+        <h1>Building An App To Find The Cheapest Bus Tickets Between Upstate New York and NYC</h1>
+        <p class="date">January 25, 2025</p>
+        <p class="subtitle">A look into my first public app</p>
+        
+        <div class="blog-content">
+            <md-block>
+
+Many students at Cornell, including myself, take buses to travel between Ithaca and other cities such as New York City, Boston, and Baltimore. This is because Ithaca airport doesn't have many flight options and Syracuse airport is over an hour away plus an expensive Uber. Leaving many students to pick from one of MegaBus, OurBus, and FlixBus, the three main bus services on campus.
+
+While booking tickets to go home for Thanksgiving sophomore year, I started getting annoyed because I had to have multiple tabs open to find the cheapest ticket for the dates I wanted. 
+## Solution
+To deal with this annoyance, I built [GetMeHome](https://apps.apple.com/us/app/getmehome-find-trips-home/id6476405163), an iOS app that aggregates the results across the MegaBus, OurBus, and FlixBus into one place and makes finding the optimal ticket easy. Once a search is complete, users can filter the results and save results for later. Then, once you've decided on a ticket, the app leads you to the trips page to checkout.
+
+## Implementation
+None of the bus services I get data from has a public API. Instead, I had to get creative for each service and get the data in slightly different ways for each service. 
+
+A commonality for each website is that I started my research for each companies API the same way. I navigated to the website on a browser, opened Chrome Dev Tools, clicked search, and found the corresponding request. From that point, each service had its own quirks and way of doing things:
+
+### OurBus
+OurBus returns a giant HTML document from its backend. So, I parse the HTML for a specific tag on the page which contains all the trips. After parsing the searched trips, I make a second request to find the trips going to nearby locations. So, if I'm looking for NYC stops, the backend will also return stops on Long Island or New Jersey.
+### MegaBus
+MegaBus thankfully had a cleaner structure so I was able to make a simple request and and get what I needed from the response. However, I also made a second request to get the stops and destinations for the intermediate stops of each route.
+### FlixBus
+Making the requests for FlixBus, similar to MegaBus, was also simple. After making the request and parsing the JSON, I was able to get everything I needed from one request. The main obstacle with FlixBus was mapping their custom location codes to physical places. For example, FlixBus has 5 different locations in NYC so I had to find each one manually and make sure I had mapping to a physical address such as "NYC Midtown (31st St & 8th Ave)"
+
+I also left out many intricate details so if you're interested in the in depth implementation, head over to the [Github](https://apps.apple.com/us/app/getmehome-find-trips-home/id6476405163)
+## Impact
+Cornell has 15,000 undergraduates. Over 50% are from the Northeast according to the data set published by the university. I would assume most of them are taking buses home, taking buses to NYC for flights, or going to NYC as a trip. With that being said, the app only has 117 after a full year of release.
+
+I told peers about it, put up posters, placed quarter cards around campus, and posted about it on LinkedIn. I definitely could've marketed the app more but, I think it's pretty clear that the app isn't appealing to users.
+
+I plan to revisit the app in the future and do a redesign of the frontend aesthetically and functionally. It's low on my priority list but it would be a fun design exercise.
+
+## Pitfalls and Competitors
+- Wanderu has direct integrations with bus services, more buses (and Amtrak), and you can buy tickets directly through the site
+- No Android or web support. The source code and routes are open source so someone else could make the projects if they wanted to for fun. 
+
+Despite the pitfalls and lack of adoption of the app, I still learned a lot and default to using the app myself. My entire winter break sophomore year was dedicated to building and releasing this app. It was a fun experience and a time I look back on fondly.
+
+I also grew as a developer and learned about beautifulsoup4 to scrape data, getting accustomed to Chrome Dev Tools, making async requests in Python, and deploying a backend API.
+
+## Check It Out
+You can download the app on the [App Store](https://apps.apple.com/us/app/getmehome-find-trips-home/id6476405163)  and view the source code on [Github](https://github.com/ronjj/GetMeHome)
+
+
+            </md-block>
+        </div>
+
+        <div class="links">
+            <a href="../writing.html" target="_self">Back to Writing</a>
+            <a href="../index.html" target="_self">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html> 
