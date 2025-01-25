@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    <div class="main-content">c
+    <div class="main-content">
         <h1>How I Helped Cornell Students Avoid Bad Grades</h1>
         <p class="date">January 24, 2025</p>
         <p class="subtitle">An overview of ProfessorPeek</p>
@@ -47,7 +47,7 @@ After a student downloads the chrome extension and navigates to Cornell's course
 ## Implementation
 Once a user goes to a class roster link, my extension activates and scrapes all the professor and class names on the page which leads to a series of API requests:
 - With a professor's name, I query RateMyProfessor for an exact match of name. If there's a match, my API returns the number of reviews ,page link, and average professor rating
-- With the class name, I use a website made by [Cornell Digital Tech & Innovation Project Team](https://www.cornelldti.org/)called CUReviews. The site has a public API and I query for the class subject and number which gives me the average overall rating, difficulty, and workload out of 5 alongside the sample size.
+- With the class name, I use a website made by [Cornell Digital Tech & Innovation Project Team](https://www.cornelldti.org/) called CUReviews. The site has a public API and I query for the class subject and number which gives me the average overall rating, difficulty, and workload out of 5 alongside the sample size.
 
 All of the requests and data processing are done by my Flask API hosted on render. To edit the page contents, I initially used vanilla JS and updated the DOM directly. For the second iteration, I started using [Plasmo](https://docs.plasmo.com/) which enabled me to use React for components and styling.
 
@@ -58,7 +58,7 @@ Other features of the extension are:
 - Quick access menu with links to other helpful tools and Cornell information
 
 ## Impact
-Once I released the extension, the overall reception was [positive](https://x.com/ronaldjabouin/status/1786896250056368437). I didn't instantly get the entire Cornell population using the extension overnight but, the extension cuurently has 305 installs which I think is great for a project initially built in a weekend.
+Once I released the extension, the overall reception was [positive](https://x.com/ronaldjabouin/status/1786896250056368437). I didn't instantly get the entire Cornell population using the extension overnight but, the extension curently has 305 installs which I think is great for a project initially built in a weekend.
 
 ## Pitfalls
 - Some professors have a different administrative name than their nickname. For example, there's a professor whose full name is Stephen Marschner but, he goes by Steve Marschner. When I search RateMyProfessor for Stephen Marschner, there are no results. I could default to picking the most similar name but, that creates a separate issue where two professors have similar names,  one doesn't have a score yet, and I show the information for the wrong professor.
