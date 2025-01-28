@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base target="_blank">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <title>Iterating Fast With AI - Ronald Jabouin Jr</title>
+    <link
+    rel="stylesheet"
+    href="https://cdn.locadapt.com/locadapt.min.css"
+    />
+    <script
+    src="https://cdn.locadapt.com/locadapt.min.js"
+    data-project-id="7b621cc3-43a2-4dd7-9fce-dca784360759"
+    ></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+</head>
+
+<body>
+    <div class="main-content">
+        <h1>Iterating Fast With AI</h1>
+        <p class="date">January 27, 2025</p>
+        <p class="subtitle">How I built a project in a weekend with Cursor</p>
+        
+        <div class="blog-content">
+            <md-block>
+                Cursor is an AI-powered extension of VS Code and it's amazing. If you have experience programming, Cursor can be a massive improvement in productivity.
+
+A few weeks ago, I saw a tweet about someone who built a book recommender that used Claude to create suggestions. I assume they built a custom scraper to get more information from Goodreads and returned all the data to the frontend.
+
+I thought this was a cool project and this past Sunday, I built a movie recommender based on DeepSeek V3 and the Rotten Tomatoes movie review website.
+
+Here's an overview of the project and how I used Cursor to help me build it.
+
+## Composer
+
+### Initial Setup
+I use the composer functionality when I start working on a project or want to make big changes spanning multiple files. To start the project, I made an empty folder, setup a .gitignore and environment files. Cursor could've done this but, I just wanted to do this myself and ensure it was done right.
+
+After setting up the bare basics, I had Cursor start getting to work. I started with the backend and had cursor create a Flask backend that took in a query, asked Deepseek a question, and returned the output. 
+
+For the movie recommendations, I needed a consistent output from Deepseek so that I could use the results in subsequent requests. So, I had cursor setup up the structured outputs infrastructure.
+
+To do this, I linked the official OpenAI documentation on structured outputs and the code from a sample project online. This feature initially didn't work. Not because of the output from Cursor but, because Deepseek didn't support Pydantic structured output at the time. To get around this, Cursor rewrote the implementation to use the json_schema version and it modified the Deepseek's prompt to contain the JSON output I wanted. The implementation has been bullet proof so far and I haven't had any issues with the output.
+
+### Frontend Refactor
+The initial version of the front end was admittedly not great aesthetically and just from the struggle of the models to make seemingly easy changes, I knew it was time to change. Since I had used AI to prototype the initial frontend, I felt fine simply deleting my frontend folder, writing a new prompt, and trusting that with Composer, I could get a better front end.
+
+This was the new prompt I used:
+
+> I want you to make the frontend for this service. Imagine you’re an expert front end engineer, understanding modern technologies and have great taste in designing websites. Based on the backend in @main.py, create a well designed frontend that has the following elements:
+>  - Showcases the text ‘Cine’ as the main headline
+>  - Under the ‘Cine’ text is a search bar. At the right edge  of the search bar should be a search icon. Once the user types in input, on the left of the search button will be a clear button to clear the input. As the user types, the search bar grows vertically down with the text.
+>  - When the user clicks search, a request should be made to the localhost server with the query. For the route, be sure to use http://127.0.0.1:5000 instead of http://localhost.
+>  - For the results, show a list of the items. The card for each movie should show the poster on the left. Then the title bolded and next to the title (unbolded) the year of release. Below the title and year will be the description. Below the description show the cast. Below the cast, show a mini pill tag showing the percentage. The percentage should say: “🍅 Critics: %/100”.
+>  - Clicking on the card brings the user to the rottentomatoes page for the website
+>   at the bottom of the list will be a generate more button which call the generate more route on the backend. After getting the results from generate more, append them to the bottom of the list.
+>   
+>   Construct this frontend using Next.js and Tailwind
+>   
+>   Do you need any clarification before starting?
+
+With this prompt it output a new UI that did exactly what I described. Is the UI going to be featured on the front page of Dribbble or posted all over X? Absolutely not. Is it good enough for an MVP or as a starting point to make sure the key aspects are working and refine UX later? Absolutely.
+
+This iteration process is incredibly powerful because instead of taking days or weeks to refine my UI and test features, I can just iterate and ship quickly. Thankfully this was just an example project but, in the future if I need an MVP for a product or even building the real product, Cursor will be incredibly useful.
+
+Other great features are being able to link directly to documentation, image uploads, multi file edits, and being able to run terminal commands on it's own.
+### Tab
+For the times I do code and make changes myself, Cursor Tab does a great job of understanding the changes I'm starting to do, suggesting the next steps, then filling them in. It's like Github Copilot but *much* better.
+
+## Human Help and Manual Tasks
+Maybe this is a prompting issue but the designs produced by Cursor and Claude are still fairly rough and need human input. To augment the prompts in the future, I plan to include images of Figma designs so that Cursor also has an idea of what I'm imagining.
+
+Another aspect that I still handle is directing Cursor to use specific technologies, frameworks, find data, and debug. For example, while working on this project, a few problems I fixed on my own were:
+1. Solving a CORS issue between my frontend and backend
+2. Finding the URL and HTML elements of the Rotten Tomatoes site that I wanted to scrape the data from. For this project
+
+For both of these issues, I used knowledge I gained from [GetMeHome](https://ronaldjabouinjr.com/blog/building-an-app-to-find-the-cheapest-bus-tickets.html)
+
+## Prompting
+- Prompt engineering is actually a fairly important topic ([1](https://arxiv.org/html/2312.16171v2/#S3), [2](https://arxiv.org/html/2402.07927v1#S3), [3](https://arxiv.org/html/2404.01077v1)) and it's a topic I want to explore further on my own. However here are some tips I've found to be helpful when prompting:
+	- Take a second and be specific about what exactly you want in terms of technologies, methodologies, and design. The same way you would be with a human. Imagine your boss coming to you and saying "make an app for me". You would have to clarify a lot. Whatever you would clarify in a design document, describe in the prompt.
+	- Building off the first point, I found that I get the best outputs when I give a good high level description of the architecture and how to approach problems. I let AI handle the specific details and implementation but I instruct on how data should be flowing between methods, where to parse data from, how to format the data.
+
+## Final Thoughts
+This isn't a paid ad for Cursor but, it is a vocal endorsement. Cursor is a great tool built on top of an IDE with a thriving plugin ecosystem, leading to a fantastic developer experience. It's best to think of it as a productive intern that's always available and only costs $20 a month.
+
+Here's a final link to the [result](https://youtu.be/RvepUN6loGk) I was able to make with Cursor
+
+Heres's a link to the [GitHub repo](https://github.com/ronjj/cine)
+            </md-block>
+        </div>
+
+        <div class="links">
+            <a href="../writing.html" target="_self">Back to Writing</a>
+            <a href="../index.html" target="_self">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html> 
