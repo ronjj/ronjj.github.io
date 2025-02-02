@@ -16,6 +16,15 @@
     ></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-X3S4QFM8BT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-X3S4QFM8BT');
+    </script>
 </head>
 
 <body>
@@ -50,11 +59,11 @@ The initial version of the front end was admittedly not great aesthetically and 
 
 This was the new prompt I used:
 
-> I want you to make the frontend for this service. Imagine you’re an expert front end engineer, understanding modern technologies and have great taste in designing websites. Based on the backend in @main.py, create a well designed frontend that has the following elements:
->  - Showcases the text ‘Cine’ as the main headline
->  - Under the ‘Cine’ text is a search bar. At the right edge  of the search bar should be a search icon. Once the user types in input, on the left of the search button will be a clear button to clear the input. As the user types, the search bar grows vertically down with the text.
+> I want you to make the frontend for this service. Imagine you're an expert front end engineer, understanding modern technologies and have great taste in designing websites. Based on the backend in @main.py, create a well designed frontend that has the following elements:
+>  - Showcases the text 'Cine' as the main headline
+>  - Under the 'Cine' text is a search bar. At the right edge of the search bar should be a search icon. Once the user types in input, on the left of the search button will be a clear button to clear the input. As the user types, the search bar grows vertically down with the text.
 >  - When the user clicks search, a request should be made to the localhost server with the query. For the route, be sure to use http://127.0.0.1:5000 instead of http://localhost.
->  - For the results, show a list of the items. The card for each movie should show the poster on the left. Then the title bolded and next to the title (unbolded) the year of release. Below the title and year will be the description. Below the description show the cast. Below the cast, show a mini pill tag showing the percentage. The percentage should say: “🍅 Critics: %/100”.
+>  - For the results, show a list of the items. The card for each movie should show the poster on the left. Then the title bolded and next to the title (unbolded) the year of release. Below the title and year will be the description. Below the description show the cast. Below the cast, show a mini pill tag showing the percentage. The percentage should say: "🍅 Critics: %/100".
 >  - Clicking on the card brings the user to the rottentomatoes page for the website
 >   at the bottom of the list will be a generate more button which call the generate more route on the backend. After getting the results from generate more, append them to the bottom of the list.
 >   
