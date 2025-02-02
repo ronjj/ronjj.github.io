@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 import re
+import subprocess
 
 def slugify(title):
     # Convert to lowercase and replace spaces with hyphens
@@ -21,6 +22,22 @@ def read_markdown_file(file_path):
     except Exception as e:
         print(f"Error reading markdown file: {e}")
         return None
+
+def publish_changes(title):
+    try:
+        # Change to the correct directory
+        os.chdir('/Users/ronaldjabouin/Documents/Web Dev/personal-webiste-github')
+        
+        # Run git commands
+        subprocess.run(['git', 'add', '.'], check=True)
+        subprocess.run(['git', 'commit', '-m', f'added post: {title}'], check=True)
+        subprocess.run(['git', 'push', 'origin', 'main'], check=True)
+        
+        print("Successfully published changes to website")
+    except subprocess.CalledProcessError as e:
+        print(f"Error during git operations: {e}")
+    except Exception as e:
+        print(f"Error publishing changes: {e}")
 
 def update_writing_page(title, slug):
     writing_path = "writing.html"
@@ -137,6 +154,19 @@ def create_blog_post():
         
         # Update writing.html with the new post
         update_writing_page(title, slug)
+        
+        # Ask about publishing
+        while True:
+            publish = input("\nPublish changes to website? (y/n): ").lower()
+            if publish in ['y', 'yes']:
+                publish_changes(title)
+                break
+            elif publish in ['n', 'no']:
+                print("Changes not published. You can publish them later using git.")
+                break
+            else:
+                print("Please enter 'y' or 'n'")
+                
     except Exception as e:
         print(f"Error creating blog post: {e}")
 
