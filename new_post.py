@@ -12,6 +12,14 @@ def slugify(title):
     slug = re.sub(r'\s+', '-', slug)
     return slug
 
+def get_title_from_filename(file_path):
+    # Get the filename without extension and path
+    filename = os.path.splitext(os.path.basename(file_path))[0]
+    # Replace hyphens and underscores with spaces
+    title = filename.replace('-', ' ').replace('_', ' ')
+    # Capitalize words
+    return ' '.join(word.capitalize() for word in title.split())
+
 def read_markdown_file(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -71,8 +79,19 @@ def update_writing_page(title, slug):
 def create_blog_post():
     print("Welcome to the blog post generator!")
     
-    # Get post information
-    title = input("Enter the post title: ")
+    # Get markdown file path first
+    while True:
+        markdown_path = input("Enter the path to your markdown file: ")
+        content = read_markdown_file(markdown_path)
+        if content is not None:
+            break
+    
+    # Get default title from filename
+    default_title = get_title_from_filename(markdown_path)
+    title_input = input(f"Enter the post title (press Enter to use '{default_title}'): ")
+    title = title_input if title_input.strip() else default_title
+    
+    # Get post subtitle
     subtitle = input("Enter the post subtitle: ")
     
     # Get date with validation
@@ -89,13 +108,6 @@ def create_blog_post():
             break
         except ValueError:
             print("Invalid date format. Please use the format 'Month DD, YYYY'")
-    
-    # Get markdown file path
-    while True:
-        markdown_path = input("Enter the path to your markdown file: ")
-        content = read_markdown_file(markdown_path)
-        if content is not None:
-            break
     
     # Create slug for filename
     slug = slugify(title)

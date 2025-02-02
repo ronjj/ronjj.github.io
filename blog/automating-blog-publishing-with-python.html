@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base target="_blank">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <title>Automating Blog Publishing With Python - Ronald Jabouin Jr</title>
+    <link
+    rel="stylesheet"
+    href="https://cdn.locadapt.com/locadapt.min.css"
+    />
+    <script
+    src="https://cdn.locadapt.com/locadapt.min.js"
+    data-project-id="7b621cc3-43a2-4dd7-9fce-dca784360759"
+    ></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+</head>
+
+<body>
+    <div class="main-content">
+        <h1>Automating Blog Publishing With Python</h1>
+        <p class="date">February 02, 2025</p>
+        <p class="subtitle">How I made it easier to post slop</p>
+        
+        <div class="blog-content">
+            <md-block>
+
+When I say automate these blogs, I'm not saying that I use AI to help write them. Instead, I'm referring to automating the process of uploading a finalized post.
+
+I draft and write out these blogs on [Obsidian](https://obsidian.md/). I've been using Obsidian since it became popular with the productivity YouTubers in the early 2020s. If you're not already familiar with it, it's a markdown editor which has a cool knowledge graph which is made from linking notes together. The tool is simple and efficient which is why I use it.
+
+### Process Before
+Before automating my publishing, I would finish writing in Obsidian then manually:
+- Make a new HTML page in Cursor and copy over the HTML from my last post
+- Change the title, subtitle, and date
+- Copy content from obsidian into the markdown block on this new change
+- Push changes to Github from the command line
+
+### Process Now
+Today I [finished up a command line tool](https://ronaldjabouinjr.com/blog/iterating-fast-with-ai.html) that simplifies the entire process. Now I only have to input the title, subtitle, path to the file and the entire process is done for me. The new page is created with all the information, it's added to the lists of all my blogs, and it gets pushed to my website. 
+
+As I was writing this post, I realized I could further automate the script. Instead of manually inputting the title and subtitle, I could have the script take it from the file name and the first line of the markdown.
+
+In the future, I'll probably add a scheduled posting feature. But that means I'd have to be ahead on my [blog posts](https://ronaldjabouinjr.com/blog/commute.html).
+            </md-block>
+        </div>
+
+        <div class="links">
+            <a href="../writing.html" target="_self">Back to Writing</a>
+            <a href="../index.html" target="_self">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
