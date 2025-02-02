@@ -2,6 +2,12 @@ import os
 from datetime import datetime
 import re
 import subprocess
+import shutil
+
+# Constants for directories
+TO_PUBLISH_DIR = "/Users/ronaldjabouin/Documents/Reading and Learning/Blog Writing/to-publish"
+PUBLISHED_DIR = "/Users/ronaldjabouin/Documents/Reading and Learning/Blog Writing/2025"
+WEBSITE_DIR = "/Users/ronaldjabouin/Documents/Web Dev/personal-webiste-github"
 
 def slugify(title):
     # Convert to lowercase and replace spaces with hyphens
@@ -34,7 +40,7 @@ def read_markdown_file(file_path):
 def publish_changes(title):
     try:
         # Change to the correct directory
-        os.chdir('/Users/ronaldjabouin/Documents/Web Dev/personal-webiste-github')
+        os.chdir(WEBSITE_DIR)
         
         # Run git commands
         subprocess.run(['git', 'add', '.'], check=True)
@@ -42,10 +48,13 @@ def publish_changes(title):
         subprocess.run(['git', 'push', 'origin', 'main'], check=True)
         
         print("Successfully published changes to website")
+        return True
     except subprocess.CalledProcessError as e:
         print(f"Error during git operations: {e}")
+        return False
     except Exception as e:
         print(f"Error publishing changes: {e}")
+        return False
 
 def update_writing_page(title, slug):
     writing_path = "writing.html"
@@ -57,7 +66,7 @@ def update_writing_page(title, slug):
         media_content_start = content.find('<div class="media-content">')
         if media_content_start == -1:
             print("Warning: Could not find media-content div in writing.html")
-            return
+            return False
         
         # Create new post HTML
         new_post_html = f'''            <div class="post">
@@ -73,19 +82,27 @@ def update_writing_page(title, slug):
         with open(writing_path, 'w', encoding='utf-8') as file:
             file.write(updated_content)
         print("Successfully updated writing.html with the new post")
+        return True
     except Exception as e:
         print(f"Error updating writing.html: {e}")
+        return False
 
-def create_blog_post():
-    print("Welcome to the blog post generator!")
-    
-    # Get markdown file path first
-    while True:
-        markdown_path = input("Enter the path to your markdown file: ")
-        content = read_markdown_file(markdown_path)
-        if content is not None:
-            break
-    
+def move_to_published(markdown_path):
+    try:
+        # Create the published directory if it doesn't exist
+        os.makedirs(PUBLISHED_DIR, exist_ok=True)
+        
+        # Move the file
+        filename = os.path.basename(markdown_path)
+        new_path = os.path.join(PUBLISHED_DIR, filename)
+        shutil.move(markdown_path, new_path)
+        print(f"Moved {filename} to published directory")
+        return True
+    except Exception as e:
+        print(f"Error moving file to published directory: {e}")
+        return False
+
+def process_single_post(markdown_path):
     # Get default title from filename
     default_title = get_title_from_filename(markdown_path)
     title_input = input(f"Enter the post title (press Enter to use '{default_title}'): ")
@@ -108,6 +125,10 @@ def create_blog_post():
             break
         except ValueError:
             print("Invalid date format. Please use the format 'Month DD, YYYY'")
+    
+    content = read_markdown_file(markdown_path)
+    if content is None:
+        return False
     
     # Create slug for filename
     slug = slugify(title)
@@ -165,22 +186,68 @@ def create_blog_post():
         print(f"\nSuccess! Blog post created at: {output_path}")
         
         # Update writing.html with the new post
-        update_writing_page(title, slug)
-        
-        # Ask about publishing
-        while True:
-            publish = input("\nPublish changes to website? (y/n): ").lower()
-            if publish in ['y', 'yes']:
-                publish_changes(title)
-                break
-            elif publish in ['n', 'no']:
-                print("Changes not published. You can publish them later using git.")
-                break
-            else:
-                print("Please enter 'y' or 'n'")
-                
+        if not update_writing_page(title, slug):
+            return False
+            
+        return True
     except Exception as e:
         print(f"Error creating blog post: {e}")
+        return False
+
+def create_blog_posts():
+    print("Welcome to the blog post generator!")
+    
+    # Check for markdown files in the to-publish directory
+    markdown_files = [f for f in os.listdir(TO_PUBLISH_DIR) if f.endswith('.md')]
+    
+    if not markdown_files:
+        print(f"No markdown files found in {TO_PUBLISH_DIR}")
+        return
+    
+    # Change to website directory for file operations
+    os.chdir(WEBSITE_DIR)
+    
+    if len(markdown_files) == 1:
+        # Process single file
+        print(f"Found one blog post: {markdown_files[0]}")
+        file_path = os.path.join(TO_PUBLISH_DIR, markdown_files[0])
+        if process_single_post(file_path):
+            if input("\nPublish changes to website? (y/n): ").lower() in ['y', 'yes']:
+                if publish_changes(get_title_from_filename(file_path)):
+                    move_to_published(file_path)
+    else:
+        # Multiple files found
+        print("\nFound multiple blog posts:")
+        for i, file in enumerate(markdown_files, 1):
+            print(f"{i}. {file}")
+        print("a. All posts")
+        
+        while True:
+            choice = input("\nEnter the number(s) of posts to publish (comma-separated) or 'a' for all: ").lower()
+            if choice == 'a':
+                indices = range(len(markdown_files))
+                break
+            try:
+                indices = [int(i.strip()) - 1 for i in choice.split(',')]
+                if all(0 <= i < len(markdown_files) for i in indices):
+                    break
+                print("Invalid selection. Please enter valid numbers.")
+            except ValueError:
+                print("Invalid input. Please enter numbers separated by commas or 'a'.")
+        
+        # Process selected files
+        success = True
+        for i in indices:
+            file_path = os.path.join(TO_PUBLISH_DIR, markdown_files[i])
+            print(f"\nProcessing: {markdown_files[i]}")
+            if process_single_post(file_path):
+                if success:  # Only move file if all operations succeeded
+                    move_to_published(file_path)
+            else:
+                success = False
+        
+        if success and input("\nPublish all changes to website? (y/n): ").lower() in ['y', 'yes']:
+            publish_changes("multiple posts")
 
 if __name__ == "__main__":
-    create_blog_post()
+    create_blog_posts()
