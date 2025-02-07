@@ -140,17 +140,20 @@ def process_single_post(markdown_path):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-X3S4QFM8BT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){{dataLayer.push(arguments);}}
+      gtag('js', new Date());
+
+      gtag('config', 'G-X3S4QFM8BT');
+    </script>
     <base target="_blank">
     <link rel="stylesheet" href="../styles/styles.css">
     <title>{title} - Ronald Jabouin Jr</title>
-    <link
-    rel="stylesheet"
-    href="https://cdn.locadapt.com/locadapt.min.css"
-    />
-    <script
-    src="https://cdn.locadapt.com/locadapt.min.js"
-    data-project-id="7b621cc3-43a2-4dd7-9fce-dca784360759"
-    ></script>
+    <link rel="stylesheet" href="https://cdn.locadapt.com/locadapt.min.css"/>
+    <script src="https://cdn.locadapt.com/locadapt.min.js" data-project-id="7b621cc3-43a2-4dd7-9fce-dca784360759"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     <script type="module" src="https://md-block.verou.me/md-block.js"></script>
 </head>
@@ -173,8 +176,7 @@ def process_single_post(markdown_path):
         </div>
     </div>
 </body>
-</html>
-'''
+</html>'''
     
     # Create blog directory if it doesn't exist
     os.makedirs('blog', exist_ok=True)
