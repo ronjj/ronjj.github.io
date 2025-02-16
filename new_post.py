@@ -111,20 +111,23 @@ def process_single_post(markdown_path):
     # Get post subtitle
     subtitle = input("Enter the post subtitle: ")
     
-    # Get date with validation
-    while True:
-        date_input = input("Enter the post date (MMMM DD, YYYY format, e.g. 'February 1, 2024') or press Enter for today's date: ")
-        if not date_input:
-            # Use current date if no input
-            date_str = datetime.now().strftime("%B %d, %Y")
-            break
-        try:
-            # Validate date format
-            datetime.strptime(date_input, "%B %d, %Y")
-            date_str = date_input
-            break
-        except ValueError:
-            print("Invalid date format. Please use the format 'Month DD, YYYY'")
+    # Default to current date
+    date_str = datetime.now().strftime("%B %d, %Y")
+    date_input = input(f"Enter the post date (press Enter to use today's date: '{date_str}'): ")
+    
+    # If user provided a date, validate and use it
+    if date_input.strip():
+        while True:
+            try:
+                # Validate date format
+                datetime.strptime(date_input, "%B %d, %Y")
+                date_str = date_input
+                break
+            except ValueError:
+                print("Invalid date format. Please use the format 'Month DD, YYYY'")
+                date_input = input(f"Enter the post date (press Enter to use today's date: '{date_str}'): ")
+                if not date_input.strip():
+                    break
     
     content = read_markdown_file(markdown_path)
     if content is None:
