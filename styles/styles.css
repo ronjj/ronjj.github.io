@@ -82,6 +82,7 @@ a:link {
     flex-direction: column;
     justify-content: center;
     gap: 10px;
+    max-width: 250px; /* Constrain width to match image */
   }
 /* mobile view */
 @media (max-width: 768px) {  
