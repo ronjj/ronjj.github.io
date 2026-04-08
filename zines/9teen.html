@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9teen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="turn.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        header {
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 24px;
+        }
+
+        header a {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            font-size: 14px;
+            color: grey;
+            text-decoration: none;
+        }
+
+        header a:hover { color: red; text-decoration: underline; }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 24px;
+            color: black;
+            margin-top: 10px;
+        }
+
+        p.subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            font-size: 14px;
+            color: #555;
+            margin-top: 4px;
+        }
+
+        #book-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #flipbook {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        #flipbook .page img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .controls button {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            font-size: 14px;
+            background: none;
+            border: 1px solid #ccc;
+            padding: 8px 20px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .controls button:hover { border-color: #111; color: #111; }
+        .controls button:disabled { opacity: 0.3; cursor: default; }
+
+        #page-indicator {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            font-size: 13px;
+            color: #777;
+            min-width: 80px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="../index.html#photography" target="_self">&larr; Back</a>
+        <h1>9teen</h1>
+        <p class="subtitle">Best iPhone and 35mm film photos while being 19.</p>
+    </header>
+
+    <div id="book-container">
+        <div id="flipbook"></div>
+        <div class="controls">
+            <button id="prev-btn">Previous</button>
+            <span id="page-indicator"></span>
+            <button id="next-btn">Next</button>
+        </div>
+    </div>
+
+    <script>
+        const pdfPages = 15;
+        const folder = 'images/9teen';
+        const soloLastPage = true;
+
+        const lastSpreadPdf = soloLastPage ? pdfPages - 1 : pdfPages;
+        const totalTurnPages = 1 + (lastSpreadPdf - 1) * 2 + (soloLastPage ? 1 : 0);
+
+        function getPageW() {
+            return Math.floor(Math.min(window.innerWidth - 40, 1000) / 2);
+        }
+
+        function buildBook() {
+            const pageW = getPageW();
+            const $book = $('#flipbook');
+            $book.empty();
+
+            // Solo cover
+            $book.append(`<div class="page"><img src="${folder}/page-01.jpg" loading="lazy"></div>`);
+
+            // Interior spreads: each PDF page is 2400x1200 — split into left/right halves
+            for (let i = 2; i <= lastSpreadPdf; i++) {
+                const num = String(i).padStart(2, '0');
+                const src = `${folder}/page-${num}.jpg`;
+                $book.append(`<div class="page" style="background:url('${src}') no-repeat 0 0/200% 100%"></div>`);
+                $book.append(`<div class="page" style="background:url('${src}') no-repeat 100% 0/200% 100%"></div>`);
+            }
+
+            // Solo back cover
+            if (soloLastPage) {
+                const num = String(pdfPages).padStart(2, '0');
+                $book.append(`<div class="page"><img src="${folder}/page-${num}.jpg" loading="lazy"></div>`);
+            }
+
+            $book.turn({ width: pageW, height: pageW, display: 'single', autoCenter: true, gradients: true, acceleration: true });
+            updateControls();
+        }
+
+        function updateControls() {
+            const $book = $('#flipbook');
+            const page = $book.turn('page');
+            const view = $book.turn('view');
+            const maxVisible = Math.max(...view.filter(p => p > 0));
+            const pdfPage = page === 1 ? 1
+                : (soloLastPage && page === totalTurnPages ? pdfPages
+                : Math.ceil((page - 1) / 2) + 1);
+
+            $('#page-indicator').text(`${pdfPage} / ${pdfPages}`);
+            $('#prev-btn').prop('disabled', page <= 1);
+            $('#next-btn').prop('disabled', maxVisible >= totalTurnPages);
+        }
+
+        function goNext() {
+            const $book = $('#flipbook');
+            const pageW = getPageW();
+            if ($book.turn('display') === 'single') {
+                if ($book.turn('page') >= totalTurnPages) return;
+                $book.turn('display', 'double');
+                $book.turn('size', pageW * 2, pageW);
+                $book.turn('page', 2);
+                return;
+            }
+            if (soloLastPage) {
+                const view = $book.turn('view');
+                const maxVisible = Math.max(...view.filter(p => p > 0));
+                if (maxVisible + 1 === totalTurnPages) {
+                    $book.turn('display', 'single');
+                    $book.turn('size', pageW, pageW);
+                    $book.turn('page', totalTurnPages);
+                    return;
+                }
+            }
+            $book.turn('next');
+        }
+
+        function goPrev() {
+            const $book = $('#flipbook');
+            const pageW = getPageW();
+            if ($book.turn('display') === 'single') {
+                if ($book.turn('page') <= 1) return;
+                $book.turn('display', 'double');
+                $book.turn('size', pageW * 2, pageW);
+                $book.turn('page', totalTurnPages - 1);
+                return;
+            }
+            const view = $book.turn('view');
+            const leftPage = view[0] > 0 ? view[0] : view[1];
+            if (leftPage <= 2) {
+                $book.turn('display', 'single');
+                $book.turn('size', pageW, pageW);
+                $book.turn('page', 1);
+                return;
+            }
+            $book.turn('previous'); 
+            
+        }
+
+        $(document).ready(function () {
+            buildBook();
+            $('#next-btn').on('click', goNext);
+            $('#prev-btn').on('click', goPrev);
+            $('#flipbook').on('turned', updateControls);
+            $(document).keydown(function (e) {
+                if (e.key === 'ArrowRight') goNext();
+                if (e.key === 'ArrowLeft') goPrev();
+            });
+        });
+
+        let resizeTimer;
+        window.addEventListener('resize', function () {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function () {
+                const $book = $('#flipbook');
+                const pageW = getPageW();
+                const isSingle = $book.turn('display') === 'single';
+                $book.turn('size', isSingle ? pageW : pageW * 2, pageW);
+            }, 200);
+        });
+    </script>
+</body>
+</html>
