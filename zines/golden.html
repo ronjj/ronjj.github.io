@@ -7,6 +7,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="turn.min.js"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-X3S4QFM8BT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-X3S4QFM8BT');
+    </script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -99,6 +107,32 @@
             min-width: 80px;
             text-align: center;
         }
+
+        :fullscreen body,
+        :-webkit-full-screen body {
+            background: #000;
+            justify-content: center;
+            padding: 0;
+        }
+        :fullscreen header,
+        :-webkit-full-screen header { display: none; }
+        :fullscreen #book-container,
+        :-webkit-full-screen #book-container { justify-content: center; }
+        :fullscreen .controls,
+        :-webkit-full-screen .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.5);
+            padding: 8px 20px;
+            border-radius: 4px;
+            gap: 16px;
+        }
+        :fullscreen .controls button,
+        :-webkit-full-screen .controls button { color: #fff; border-color: rgba(255,255,255,0.4); }
+        :fullscreen #page-indicator,
+        :-webkit-full-screen #page-indicator { color: rgba(255,255,255,0.6); }
     </style>
 </head>
 <body>
@@ -115,125 +149,17 @@
             <button id="prev-btn">Previous</button>
             <span id="page-indicator"></span>
             <button id="next-btn">Next</button>
+            <button id="present-btn">Present</button>
         </div>
     </div>
 
+    <script src="zine-viewer.js"></script>
     <script>
-        const pdfPages = 16;
-        const folder = 'images/golden';
-        const soloLastPage = false;
-
-        const lastSpreadPdf = soloLastPage ? pdfPages - 1 : pdfPages;
-        const totalTurnPages = 1 + (lastSpreadPdf - 1) * 2 + (soloLastPage ? 1 : 0);
-
-        function getPageW() {
-            return Math.floor(Math.min(window.innerWidth - 40, 1000) / 2);
-        }
-
-        function buildBook() {
-            const pageW = getPageW();
-            const $book = $('#flipbook');
-            $book.empty();
-
-            // Solo cover
-            $book.append(`<div class="page"><img src="${folder}/page-01.jpg" loading="lazy"></div>`);
-
-            // Interior spreads: each PDF page is 2400x1200 — split into left/right halves
-            for (let i = 2; i <= lastSpreadPdf; i++) {
-                const num = String(i).padStart(2, '0');
-                const src = `${folder}/page-${num}.jpg`;
-                $book.append(`<div class="page" style="background:url('${src}') no-repeat 0 0/200% 100%"></div>`);
-                $book.append(`<div class="page" style="background:url('${src}') no-repeat 100% 0/200% 100%"></div>`);
-            }
-
-            // Solo back cover (if applicable)
-            if (soloLastPage) {
-                const num = String(pdfPages).padStart(2, '0');
-                $book.append(`<div class="page"><img src="${folder}/page-${num}.jpg" loading="lazy"></div>`);
-            }
-
-            $book.turn({ width: pageW, height: pageW, display: 'single', autoCenter: true, gradients: true, acceleration: true });
-            updateControls();
-        }
-
-        function updateControls() {
-            const $book = $('#flipbook');
-            const page = $book.turn('page');
-            const view = $book.turn('view');
-            const maxVisible = Math.max(...view.filter(p => p > 0));
-            const pdfPage = page === 1 ? 1
-                : (soloLastPage && page === totalTurnPages ? pdfPages
-                : Math.ceil((page - 1) / 2) + 1);
-
-            $('#page-indicator').text(`${pdfPage} / ${pdfPages}`);
-            $('#prev-btn').prop('disabled', page <= 1);
-            $('#next-btn').prop('disabled', maxVisible >= totalTurnPages);
-        }
-
-        function goNext() {
-            const $book = $('#flipbook');
-            const pageW = getPageW();
-            if ($book.turn('display') === 'single') {
-                if ($book.turn('page') >= totalTurnPages) return;
-                $book.turn('display', 'double');
-                $book.turn('size', pageW * 2, pageW);
-                $book.turn('page', 2);
-                return;
-            }
-            if (soloLastPage) {
-                const view = $book.turn('view');
-                const maxVisible = Math.max(...view.filter(p => p > 0));
-                if (maxVisible + 1 === totalTurnPages) {
-                    $book.turn('display', 'single');
-                    $book.turn('size', pageW, pageW);
-                    $book.turn('page', totalTurnPages);
-                    return;
-                }
-            }
-            $book.turn('next');
-        }
-
-        function goPrev() {
-            const $book = $('#flipbook');
-            const pageW = getPageW();
-            if ($book.turn('display') === 'single') {
-                if ($book.turn('page') <= 1) return;
-                $book.turn('display', 'double');
-                $book.turn('size', pageW * 2, pageW);
-                $book.turn('page', totalTurnPages - 1);
-                return;
-            }
-            const view = $book.turn('view');
-            const leftPage = view[0] > 0 ? view[0] : view[1];
-            if (leftPage <= 2) {
-                $book.turn('display', 'single');
-                $book.turn('size', pageW, pageW);
-                $book.turn('page', 1);
-                return;
-            }
-            $book.turn('previous');
-        }
-
-        $(document).ready(function () {
-            buildBook();
-            $('#next-btn').on('click', goNext);
-            $('#prev-btn').on('click', goPrev);
-            $('#flipbook').on('turned', updateControls);
-            $(document).keydown(function (e) {
-                if (e.key === 'ArrowRight') goNext();
-                if (e.key === 'ArrowLeft') goPrev();
-            });
-        });
-
-        let resizeTimer;
-        window.addEventListener('resize', function () {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(function () {
-                const $book = $('#flipbook');
-                const pageW = getPageW();
-                const isSingle = $book.turn('display') === 'single';
-                $book.turn('size', isSingle ? pageW : pageW * 2, pageW);
-            }, 200);
+        initZineViewer({
+            pdfPages: 16,
+            folder: 'images/golden',
+            soloLastPage: false,
+            zineTitle: 'golden'
         });
     </script>
 </body>
